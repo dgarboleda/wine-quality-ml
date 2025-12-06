@@ -94,3 +94,14 @@ secrets/
 *.pem
 *.key
 *.crt
+
+# Guide & documentation files (local use only)
+GITHUB_*.md
+COPIAR_Y_PEGAR.md
+PORTFOLIO_*.md
+README_PRIMERO.txt
+START_HERE.md
+PORTAFOLIO_GUIDE.md
+RESUMEN_FINAL.md
+CHANGELOG.md
+MODELO_DOCUMENTACION.md
