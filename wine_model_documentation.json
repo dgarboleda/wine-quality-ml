@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "titulo": "Modelo de Predicción de Calidad de Vino",
+    "fecha_generacion": "2025-12-06 13:13:11",
+    "dataset": "Wine Quality Red",
+    "n_muestras": 1599,
+    "n_features": 11,
+    "n_clases": 6
+  },
+  "problema": {
+    "tipo": "Clasificación multiclase desbalanceada",
+    "clases": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "desbalance": "Clases 3 y 8 muy minoritarias (~0.6% y 0.06%)",
+    "metrica_primaria": "F1 Macro (balance entre clases)",
+    "razon": "Problema desbalanceado donde clases minoritarias son críticas"
+  },
+  "metodologia": {
+    "preparacion_datos": [
+      "Train/Test split estratificado (80-20)",
+      "SMOTE aplicado SOLO en entrenamiento (sin data leakage)",
+      "Validación cruzada: StratifiedKFold 3 folds"
+    ],
+    "modelos_evaluados": 8,
+    "mejores_modelos": [
+      "1. LightGBM + SMOTE (F1_macro: 0.374)",
+      "2. XGBoost + SMOTE (F1_macro: 0.366)",
+      "3. RandomForest (F1_macro: 0.350)"
+    ],
+    "modelo_seleccionado": "LightGBM + SMOTE",
+    "razon_seleccion": "Mayor F1_macro, mejor balance sesgo-varianza, menos sobreajuste"
+  },
+  "optimizacion": {
+    "tecnica": "RandomizedSearchCV",
+    "iteraciones": 20,
+    "scoring": "f1_macro",
+    "mejora_vs_base": "+1.97%"
+  },
+  "hiperparametros_finales": {
+    "learning_rate": 0.05,
+    "n_estimators": 261,
+    "num_leaves": 43,
+    "max_depth": -1,
+    "reg_lambda": 0.5,
+    "class_weight": "balanced",
+    "smote_k_neighbors": 3
+  },
+  "rendimiento_final": {
+    "metricas_cv": {
+      "f1_macro": 0.374,
+      "balanced_accuracy": "0.378 (estimado)",
+      "recall_macro": "0.380 (estimado)"
+    },
+    "metricas_test": {
+      "f1_macro": 0.365,
+      "balanced_accuracy": 0.378,
+      "recall_macro": 0.378
+    },
+    "generalizacion": "Buena (diferencia CV-TEST: 0.009)"
+  },
+  "top_features": [
+    {
+      "feature": "total sulfur dioxide",
+      "importance": 6218
+    },
+    {
+      "feature": "alcohol",
+      "importance": 5257
+    },
+    {
+      "feature": "sulphates",
+      "importance": 5210
+    },
+    {
+      "feature": "chlorides",
+      "importance": 5026
+    },
+    {
+      "feature": "volatile acidity",
+      "importance": 4955
+    }
+  ],
+  "analisis_errores": {
+    "clases_problematicas": [
+      "Clase 3 (Calidad baja): Pocas muestras, confundida frecuentemente con clase 4",
+      "Clase 8 (Calidad muy alta): Apenas muestras, difícil de predecir"
+    ],
+    "fortalezas": "Mejor desempeño en clases 5 y 6 (mayoritarias)",
+    "debilidades": "Sensibilidad limitada en extremos (clases 3 y 8)"
+  },
+  "produccion": {
+    "recomendaciones": [
+      "Usar umbral de confianza ≥0.6 para filtrar predicciones poco fiables",
+      "Monitorear drift de datos en producción",
+      "Re-entrenar cada 3 meses si hay cambios en distribución",
+      "Para clases minoritarias, considerar análisis manual complementario"
+    ],
+    "limitaciones": [
+      "Modelo multiclase con desbalance severo",
+      "Bajo desempeño en clases 3 y 8 (datos insuficientes)",
+      "No recomendado para producción sin revisión humana en clases extremas",
+      "Requiere reentrenamiento si distribución de datos cambia significativamente"
+    ],
+    "proximos_pasos": [
+      "1. Recolectar más muestras de clases minoritarias",
+      "2. Investigar nuevas features que discriminen clases extremas",
+      "3. Considerar cost-sensitive learning o class weights ajustados",
+      "4. Implementar A/B testing antes de full deployment"
+    ]
+  }
+}
